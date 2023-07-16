@@ -3,8 +3,8 @@ const urlTopSales = import.meta.env.VITE_API_URL_TOPSALES;
 const urlCategories = import.meta.env.VITE_API_URL_CATEGORIES;
 
 
-async function getProducts(categoryId, offset) {
-  const response = await query(`${urlProducts}?&categoryId=${categoryId}&offset=${offset}`);
+async function getProducts(categoryId = 0, offset = 0, searchQuery = '') {
+  const response = await query(`${urlProducts}?&categoryId=${categoryId}&offset=${offset}&q=${searchQuery}`);
 
   return await response.json();
 }

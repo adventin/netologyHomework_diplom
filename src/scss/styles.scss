@@ -1,4 +1,4 @@
-@import "../../node_modules/bootstrap/scss/bootstrap";
+@import "node_modules/bootstrap/scss/bootstrap";
 @import "node_modules/font-awesome/scss/font-awesome.scss";
 
 /* стили к диплому */
@@ -25,9 +25,6 @@ section {
   margin-top: 2em;
   margin-bottom: 2em;
 }
-
-
-
 
 /* Common Styles */
 .invisible {

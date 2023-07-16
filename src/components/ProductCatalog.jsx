@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import { ProductCategories, ProductList } from "../components";
 import { Loader } from "./common";
 import { getCategories, getProducts } from "../service";
-
+import { useSearch } from "../hooks";
 export function ProductCatalog({ children }) {
+  const { searchQuery, setSearchQuery } = useSearch();
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -25,10 +26,14 @@ export function ProductCatalog({ children }) {
   };
 
   useEffect(() => {
+    setOffset(0);
+  }, [searchQuery])
+
+  useEffect(() => {
     const getData = async () => {
       Promise.all([
         getCategories(),
-        getProducts(activeCategory, offset)
+        getProducts(activeCategory, offset, searchQuery)
       ])
         .then(([dataCategories, dataProducts]) => {
           const productsTmp = offset ? [...products, ...dataProducts] : dataProducts;
@@ -42,7 +47,9 @@ export function ProductCatalog({ children }) {
     };
 
     getData();
-  }, [activeCategory, offset]);
+  }, [activeCategory, offset, searchQuery]);
+
+
 
   if (isLoading) {
     return (

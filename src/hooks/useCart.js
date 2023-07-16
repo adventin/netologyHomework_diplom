@@ -12,9 +12,21 @@ export const useCart = () => {
     setStore({ ...store, cart: { ...store.cart, items: cartItems } })
   }
 
+  const addToCart = (product, selectedSize, quantity) => {
+    // проверяем существует ли
+    const item = {
+      skuSize: `${product.sku}_${selectedSize}`,
+      ...product
+    };
+    debugger;
+
+    setCartItems([...store.cart.items, item]);
+  }
+
   return {
     cart: store.cart,
     setCartTotal,
-    setCartItems
+    setCartItems,
+    addToCart
   };
 }

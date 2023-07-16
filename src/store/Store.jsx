@@ -15,10 +15,13 @@ const Store = ({ children }) => {
     }
   };
 
+  if (localStorage.getItem('cart')) {
+    initialStore.cart = JSON.parse(localStorage.getItem('cart'));
+  }
   const [store, setStore] = useState(initialStore);
 
   return (
-    <Context.Provider value={{store, setStore}}>
+    <Context.Provider value={{ store, setStore }}>
       {children}
     </Context.Provider>
   );

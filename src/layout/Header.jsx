@@ -1,10 +1,18 @@
+import { useState, useRef, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 import { NavLink } from 'react-router-dom';
 import { useCart, useSearch } from '../hooks';
 
 
 export function Header() {
+  const navigate = useNavigate();
   const { cart } = useCart();
-  const { search } = useSearch();
+  const { searchQuery, setSearchQuery } = useSearch();
+  const [searchField, setSearchField] = useState(searchQuery);
+  const searchForm = useRef(null);
+  const searchFieldControl = useRef(null);
+  const [isOpenedSearch, setIsOpenedSearch] = useState(false);
+
   const headerMenu = [
     {
       title: "Главная",
@@ -24,7 +32,29 @@ export function Header() {
     },
   ];
 
-  const getClassNameNavLink = ({ isActive, isPending }) => `menu__item ${isPending ? "menu__item-pending" : isActive ? "menu__item-active" : ""}`;
+  const onClickOpenSearch = (event) => {
+    const searchFieldValue = searchFieldControl.current.value;
+
+    if (isOpenedSearch && Boolean(searchFieldValue)) {
+      setSearchQuery(searchFieldValue);
+      return navigate("/catalog");
+    }
+    setIsOpenedSearch(!isOpenedSearch);
+    searchForm.current.classList.toggle('invisible');
+    searchForm.current.querySelector('input').focus();
+  };
+
+  const onSubmitSearch = (event) => {
+    event.preventDefault();
+  }
+
+  const onChangeSearch = (event) => {
+    setSearchField(event.target.value);
+  }
+
+  useEffect(() => {
+    setSearchField(searchQuery);
+  }, [searchQuery]);
 
   return (
     <header className="container">
@@ -44,15 +74,15 @@ export function Header() {
               </ul>
               <div>
                 <div className="header-controls-pics">
-                  <div data-id="search-expander" className="header-controls-pic header-controls-search"></div>
+                  <div data-id="search-expander" className="header-controls-pic header-controls-search" onClick={onClickOpenSearch} />
                   {/* <!-- Do programmatic navigation on click to /cart.html --> */}
                   <div className="header-controls-pic header-controls-cart">
                     <div className="header-controls-cart-full">1</div>
                     <div className="header-controls-cart-menu"></div>
                   </div>
                 </div>
-                <form data-id="search-form" className="header-controls-search-form form-inline invisible">
-                  <input className="form-control" placeholder="Поиск" />
+                <form data-id="search-form" className="header-controls-search-form form-inline invisible" ref={searchForm} onSubmit={onSubmitSearch}>
+                  <input className="form-control" placeholder="Поиск" ref={searchFieldControl} value={searchField} onChange={onChangeSearch} />
                 </form>
               </div>
             </div>

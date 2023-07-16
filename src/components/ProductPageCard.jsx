@@ -1,34 +1,9 @@
-export function ProductPageCard({ product, onClickProductSize }) {
+import { useState } from 'react';
+import { useCart } from "../hooks";
 
-  console.log("product", product);
+export function ProductPageCard({ product, quantity, selectedSize, onClickProductSize, onClickIncrementQuantity, onClickDecrementQuantity }) {
 
-  //   {
-  //     "id": 24,
-  //     "category": 13,
-  //     "title": "Туфли на выход",
-  //     "images": [
-  //         "https://raw.githubusercontent.com/netology-code/ra16-diploma/master/html/img/products/outgoing_shoes.jpg",
-  //         "https://raw.githubusercontent.com/netology-code/ra16-diploma/master/html/img/products/outgoing_shoes_2.jpg"
-  //     ],
-  //     "sku": "1000004",
-  //     "manufacturer": "Dolce & Gabbana",
-  //     "color": "Черный",
-  //     "material": "Кожа",
-  //     "reason": "Высокая мода",
-  //     "season": "Лето",
-  //     "heelSize": "8 см.",
-  //     "price": 2500,
-  //     "sizes": [
-  //         {
-  //             "size": "14 US",
-  //             "available": true
-  //         },
-  //         {
-  //             "size": "18 US",
-  //             "available": false
-  //         }
-  //     ]
-  // }
+  const { addToCart } = useCart();
 
   return (
     <section className="catalog-item">
@@ -71,22 +46,20 @@ export function ProductPageCard({ product, onClickProductSize }) {
               {product.sizes && product.sizes.filter(sizeItem => sizeItem.available).map((sizeItem) => (
                 <span key={sizeItem.size} className={`catalog-item-size `} onClick={onClickProductSize(sizeItem.size)}>{sizeItem.size}</span>
               ))}
-              {/* <span className="catalog-item-size selected">18 US</span> */}
-              
             </p>
             {product.sizes &&
               <p>Количество:
                 <span className="btn-group btn-group-sm pl-2">
-                  <button className="btn btn-secondary">-</button>
-                  <span className="btn btn-outline-primary">1</span>
-                  <button className="btn btn-secondary">+</button>
+                  <button className="btn btn-secondary" onClick={onClickDecrementQuantity} >-</button>
+                  <span className="btn btn-outline-primary">{quantity}</span>
+                  <button className="btn btn-secondary" onClick={onClickIncrementQuantity} >+</button>
                 </span>
               </p>
             }
 
           </div>
           {product.sizes &&
-            <button className="btn btn-danger btn-block btn-lg">В корзину</button>
+            <button className="btn btn-danger btn-block btn-lg" disabled={!selectedSize} onClick={() => addToCart(product, selectedSize, quantity)}>В корзину</button>
           }
         </div>
       </div>

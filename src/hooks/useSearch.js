@@ -3,12 +3,12 @@ import { useStore } from '../store/Store';
 export const useSearch = () => {
   const { store, setStore } = useStore();
 
-  const setSearchQuery = (searchQuery) => {
-    setStore({ ...store, cart: { ...store.cart, total: total } })
-  }
+  const setSearchQuery = (searchQuery = '') => {
+    setStore({ ...store, search: { query: searchQuery } })
+  }  
 
   return {
-    search: store.search,
+    searchQuery: store.search.query,
     setSearchQuery
   };
 }
