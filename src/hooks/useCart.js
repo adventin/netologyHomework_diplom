@@ -8,25 +8,36 @@ export const useCart = () => {
   }
 
   const setCartItems = (cartItems) => {
-    // todo: reduce
-    setStore({ ...store, cart: { ...store.cart, items: cartItems } })
+    const totalPrice = cartItems.reduce((totalPrice, item) => totalPrice + item.productData.price * item.quantity, 0);
+    setStore({ ...store, cart: { ...store.cart, items: cartItems } });
+    setCartTotal(totalPrice);
   }
 
   const addToCart = (product, selectedSize, quantity) => {
-    // проверяем существует ли
-    const item = {
-      skuSize: `${product.sku}_${selectedSize}`,
-      ...product
-    };
-    debugger;
+    let existingItemIndex = store.cart.items.findIndex(item => item.sku === `${product.sku}_${selectedSize}`);
 
-    setCartItems([...store.cart.items, item]);
+    if (!~existingItemIndex) {
+      store.cart.items.push({
+        sku: `${product.sku}_${selectedSize}`,
+        size: selectedSize,
+        quantity: quantity,
+        productData: product
+      });
+    } else {
+      store.cart.items[existingItemIndex].quantity += quantity;
+    }
+    setCartItems(store.cart.items);
+  }
+
+  const removeFromCart = (sku) => {
+    store.cart.items = store.cart.items.filter(item => item.sku !== sku);
+    setCartItems(store.cart.items);
   }
 
   return {
     cart: store.cart,
-    setCartTotal,
     setCartItems,
+    removeFromCart,
     addToCart
   };
 }

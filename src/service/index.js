@@ -1,6 +1,7 @@
 const urlProducts = import.meta.env.VITE_API_URL_ITEMS;
 const urlTopSales = import.meta.env.VITE_API_URL_TOPSALES;
 const urlCategories = import.meta.env.VITE_API_URL_CATEGORIES;
+const urlOrder = import.meta.env.VITE_API_URL_ORDER;
 
 
 async function getProducts(categoryId = 0, offset = 0, searchQuery = '') {
@@ -28,8 +29,19 @@ async function getCategories() {
   return await response.json();
 }
 
+function confirmOrder(order) {
+  const response = query(urlOrder, {
+    method: 'POST',
+    body: JSON.stringify(order),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return response;
+}
+
 function query(url, options = {}) {
   return fetch(url, options);
 }
 
-export { getProducts, getProduct, getTopSales, getCategories };
+export { getProducts, getProduct, getTopSales, getCategories, confirmOrder };

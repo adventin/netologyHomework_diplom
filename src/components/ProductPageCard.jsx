@@ -1,9 +1,14 @@
-import { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import { useCart } from "../hooks";
 
 export function ProductPageCard({ product, quantity, selectedSize, onClickProductSize, onClickIncrementQuantity, onClickDecrementQuantity }) {
-
+  const navigate = useNavigate();
   const { addToCart } = useCart();
+
+  const onClickAddToCart = () => {
+    addToCart(product, selectedSize, quantity);
+    navigate("/cart");
+  }
 
   return (
     <section className="catalog-item">
@@ -59,7 +64,7 @@ export function ProductPageCard({ product, quantity, selectedSize, onClickProduc
 
           </div>
           {product.sizes &&
-            <button className="btn btn-danger btn-block btn-lg" disabled={!selectedSize} onClick={() => addToCart(product, selectedSize, quantity)}>В корзину</button>
+            <button className="btn btn-danger btn-block btn-lg" disabled={!selectedSize} onClick={onClickAddToCart}>В корзину</button>
           }
         </div>
       </div>

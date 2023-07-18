@@ -32,6 +32,10 @@ export function Header() {
     },
   ];
 
+  const onClickNavigateToCart = () => {
+    navigate("/cart");
+  }
+
   const onClickOpenSearch = (event) => {
     const searchFieldValue = searchFieldControl.current.value;
 
@@ -76,8 +80,10 @@ export function Header() {
                 <div className="header-controls-pics">
                   <div data-id="search-expander" className="header-controls-pic header-controls-search" onClick={onClickOpenSearch} />
                   {/* <!-- Do programmatic navigation on click to /cart.html --> */}
-                  <div className="header-controls-pic header-controls-cart">
-                    <div className="header-controls-cart-full">1</div>
+                  <div className="header-controls-pic header-controls-cart" onClick={onClickNavigateToCart}>
+                    {!!cart.items.length && (
+                      <div className="header-controls-cart-full">{cart.items.length}</div>
+                    )}
                     <div className="header-controls-cart-menu"></div>
                   </div>
                 </div>

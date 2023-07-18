@@ -1,27 +1,34 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
-const urlCategories = import.meta.env.VITE_API_URL_CATEGORIES;
+const initialStore = {
+  cart: {
+    items: [],
+    total: 0
+  },
+  search: {
+    query: '',
+  },
+  order: {
+    phone: '',
+    address: '',
+  }
+};
 
 export const Context = createContext({});
 const Store = ({ children }) => {
+  const [store, setStore] = useState({ ...initialStore, cart: JSON.parse(localStorage.getItem('cart')) || initialStore.cart });
 
-  const initialStore = {
-    cart: {
-      items: [],
-      total: 0
-    },
-    search: {
-      query: '',
-    }
+  const clearStore = () => {
+    localStorage.removeItem('cart');
+    setStore({ ...initialStore });
   };
-
-  if (localStorage.getItem('cart')) {
-    initialStore.cart = JSON.parse(localStorage.getItem('cart'));
-  }
-  const [store, setStore] = useState(initialStore);
+  
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(store.cart));
+  }, [store.cart]);
 
   return (
-    <Context.Provider value={{ store, setStore }}>
+    <Context.Provider value={{ store, setStore, clearStore }}>
       {children}
     </Context.Provider>
   );
@@ -32,4 +39,6 @@ export const useStore = () => {
   return store;
 }
 
+export { initialStore };
 export default Store;
+
